@@ -466,11 +466,23 @@ def generer_rapport_word(donnees, domaine, chemin_fichier):
     )
 
     document.add_heading("Analyse", level=1)
-    document.add_paragraph(
-        "Cette section nécessite une interprétation experte des résultats ci-dessus. "
-        "L'Assistant IA local ne rédige pas encore d'analyse qualitative automatique ; "
-        "cette fonctionnalité nécessite une connexion à une IA en ligne."
-    )
+    if donnees is not None:
+        problemes = detecter_problemes(donnees)
+        colonnes_numeriques = list(donnees.select_dtypes(include="number").columns)
+        if problemes and not (len(problemes) == 1 and "Aucun problème" in problemes[0]):
+            document.add_paragraph("Points d'attention détectés automatiquement :")
+            for p in problemes:
+                document.add_paragraph(f"- {p}", style="List Bullet")
+        else:
+            document.add_paragraph("Aucun problème majeur détecté dans les données.")
+        if colonnes_numeriques:
+            document.add_paragraph(
+                f"Les {len(colonnes_numeriques)} colonnes numériques ont été décrites ci-dessus. "
+                "Pour une interprétation qualitative plus poussée (tendances, recommandations métier), "
+                "une connexion à une IA en ligne est nécessaire."
+            )
+    else:
+        document.add_paragraph("Aucune donnée disponible pour l'analyse.")
 
     document.add_heading("Tendances", level=1)
     document.add_paragraph(
