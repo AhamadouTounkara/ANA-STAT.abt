@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+
+# Environnements virtuels
+.venv/
+.venv-*/
+.venv-ancien-store/
+
+# Build / distribution
+build/
+dist/
+*.spec
+
+# IDE et notebooks
+.vscode/
+.ipynb_checkpoints/
+*.ipynb
+
+# Données générées à l'exécution
+Donnée complet du projet/utilisateurs.json
+Donnée complet du projet/journal_actions.txt
+Donnée complet du projet/sauvegardes_auto/
+Donnée complet du projet/erreur_ana_stat.log
+Donnée complet du projet/__pycache__/
+Donnée complet du projet/**/__pycache__/
+
+# OS
+Thumbs.db
+desktop.ini
+*.lnk

@@ -1,0 +1,31 @@
+{
+  "police": "Segoe UI",
+  "rayon_coins": "9px",
+  "mode_par_defaut": "clair",
+  "clair": {
+    "bleu_nuit": "#14213D",
+    "fond": "#F5F7FA",
+    "fond_widget": "#FFFFFF",
+    "bleu_action": "#2563EB",
+    "bleu_action_survol": "#1D4ED8",
+    "vert_succes": "#16A34A",
+    "orange_avertissement": "#F59E0B",
+    "rouge_erreur": "#DC2626",
+    "texte": "#1F2937",
+    "texte_secondaire": "#6B7280",
+    "bordure": "#E2E8F0"
+  },
+  "sombre": {
+    "bleu_nuit": "#0B1220",
+    "fond": "#111827",
+    "fond_widget": "#1F2937",
+    "bleu_action": "#3B82F6",
+    "bleu_action_survol": "#60A5FA",
+    "vert_succes": "#22C55E",
+    "orange_avertissement": "#FBBF24",
+    "rouge_erreur": "#F87171",
+    "texte": "#E5E7EB",
+    "texte_secondaire": "#9CA3AF",
+    "bordure": "#374151"
+  }
+}
