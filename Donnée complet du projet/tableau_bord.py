@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import (
-    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
+    QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
     QPushButton, QTabWidget, QListWidget, QFrame, QSizePolicy, QScrollArea
 )
 from PyQt6.QtCore import Qt
@@ -14,7 +14,7 @@ from statistiques import calculer_statistiques
 from Design.theme import appliquer_theme
 from Design.composants import creer_pied_de_page, creer_titre_section
 
-VERSION_LOGICIEL = "ANA-STAT.abt v0.1 (en développement)"
+VERSION_LOGICIEL = "ANA-STAT.abt v1.0"
 
 SECTIONS_MENU = [
     ("Accueil", True),
@@ -55,18 +55,6 @@ def creer_barre_superieure(nom_utilisateur, role):
     titre = QLabel("ANA-STAT.abt")
     titre.setStyleSheet("font-weight: bold; font-size: 14px;")
 
-    champ_recherche = QLineEdit()
-    champ_recherche.setPlaceholderText("Rechercher... (à venir)")
-    champ_recherche.setEnabled(False)
-
-    bouton_notifications = QPushButton("🔔")
-    bouton_notifications.setToolTip("Notifications (à venir)")
-    bouton_notifications.setEnabled(False)
-
-    bouton_assistant_ia = QPushButton("🤖 Assistant IA")
-    bouton_assistant_ia.setToolTip("Module IA à venir")
-    bouton_assistant_ia.setEnabled(False)
-
     bouton_parametres = QPushButton("⚙️")
     bouton_parametres.setToolTip("Paramètres d'apparence")
 
@@ -99,10 +87,7 @@ def creer_barre_superieure(nom_utilisateur, role):
 
     layout.addWidget(logo)
     layout.addWidget(titre)
-    layout.addWidget(champ_recherche)
     layout.addStretch()
-    layout.addWidget(bouton_notifications)
-    layout.addWidget(bouton_assistant_ia)
     layout.addWidget(bouton_parametres)
     layout.addWidget(label_profil)
 

@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import (
-    QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel, QComboBox,
+    QWidget, QVBoxLayout, QHBoxLayout, QGridLayout, QLabel,
     QPushButton, QTableWidget, QTableWidgetItem, QGroupBox,
     QFileDialog, QMessageBox, QFrame, QScrollArea, QTabWidget,
     QTreeWidget, QTreeWidgetItem, QSplitter, QStackedWidget
@@ -837,29 +837,9 @@ def creer_onglet_donnees(fonction_import, fonction_import_sql):
     bouton_sql.clicked.connect(fonction_import_sql)
     layout_source.addWidget(bouton_sql)
 
-    for nom in ["Recensement", "Enquête"]:
-        bouton = QPushButton(nom)
-        bouton.setEnabled(False)
-        bouton.setToolTip("À venir")
-        layout_source.addWidget(bouton)
     groupe_source.setLayout(layout_source)
 
-    groupe_filtres = QGroupBox("Filtres")
-    layout_filtres = QGridLayout()
-    colonne_index = 0
-    for nom_filtre in CORRESPONDANCES_FILTRES:
-        label = QLabel(nom_filtre)
-        combo = QComboBox()
-        combo.setMinimumWidth(120)
-        combo.setEnabled(False)
-        combo.addItem("Non disponible")
-        layout_filtres.addWidget(label, 0, colonne_index)
-        layout_filtres.addWidget(combo, 1, colonne_index)
-        colonne_index += 1
-    groupe_filtres.setLayout(layout_filtres)
-
     layout.addWidget(groupe_source)
-    layout.addWidget(groupe_filtres)
     layout.addStretch()
     contenu.setLayout(layout)
 
