@@ -865,6 +865,18 @@ class PageSIG(QWidget):
         layout_gauche.addWidget(self.bouton_actualiser)
         layout_gauche.addWidget(groupe_donnees)
         layout_gauche.addWidget(groupe_export)
+
+        groupe_analyse_avancee = QGroupBox("Analyse avancée")
+        layout_analyse_avancee = QVBoxLayout()
+        self.bouton_top5 = QPushButton("Top 5 zones")
+        self.bouton_stats_sig = QPushButton("Statistiques spatiales")
+        self.bouton_risque = QPushButton("Zones à risque (top 25 %)")
+        layout_analyse_avancee.addWidget(self.bouton_top5)
+        layout_analyse_avancee.addWidget(self.bouton_stats_sig)
+        layout_analyse_avancee.addWidget(self.bouton_risque)
+        groupe_analyse_avancee.setLayout(layout_analyse_avancee)
+
+        layout_gauche.addWidget(groupe_analyse_avancee)
         layout_gauche.addWidget(astuce)
         layout_gauche.addStretch()
 
@@ -961,6 +973,10 @@ class PageSIG(QWidget):
         self.bouton_pdf.clicked.connect(lambda: self._exporter_carte("PDF"))
         self.bouton_csv.clicked.connect(lambda: self._exporter_tableau("CSV"))
         self.bouton_excel.clicked.connect(lambda: self._exporter_tableau("Excel"))
+
+        self.bouton_top5.clicked.connect(self._afficher_top5)
+        self.bouton_stats_sig.clicked.connect(self._afficher_statistiques)
+        self.bouton_risque.clicked.connect(self._afficher_zones_risque)
 
         self.canvas.mpl_connect("button_press_event", self._clic_carte)
         self.tableau.itemSelectionChanged.connect(self._selection_tableau)
@@ -1567,6 +1583,62 @@ class PageSIG(QWidget):
                 return
 
         QMessageBox.information(self, "Export réussi", f"Tableau exporté vers :\n{chemin}")
+
+    # ---- Analyse avancée ----
+
+    def _nom_zone(self, cle):
+        for entite in self.features:
+            if entite["cle"] == cle:
+                return entite["nom"]
+        return str(cle)
+
+    def _afficher_top5(self):
+        if not self.valeurs:
+            QMessageBox.information(self, "Top 5 zones", "Aucune donnée à afficher. Importez d'abord un fichier.")
+            return
+        items = sorted(
+            self.valeurs.items(),
+            key=lambda x: (x[1] if x[1] is not None and math.isfinite(x[1]) else float("-inf")),
+            reverse=True,
+        )
+        top = items[:5]
+        texte = "Top 5 zones par valeur :\n\n"
+        for i, (cle, val) in enumerate(top, 1):
+            texte += f"{i}. {self._nom_zone(cle)} : {formater_nombre(val)}\n"
+        QMessageBox.information(self, "Top 5 zones", texte)
+
+    def _afficher_statistiques(self):
+        valeurs = [v for v in self.valeurs.values() if v is not None and math.isfinite(v)]
+        if not valeurs:
+            QMessageBox.information(self, "Statistiques spatiales", "Aucune donnée numérique.")
+            return
+        import statistics
+        cle_max = max(self.valeurs, key=lambda k: self.valeurs[k] if (self.valeurs[k] is not None and math.isfinite(self.valeurs[k])) else float("-inf"))
+        texte = (
+            f"Nombre de zones : {len(valeurs)}\n"
+            f"Moyenne : {formater_nombre(sum(valeurs) / len(valeurs))}\n"
+            f"Médiane : {formater_nombre(statistics.median(valeurs))}\n"
+            f"Minimum : {formater_nombre(min(valeurs))}\n"
+            f"Maximum : {formater_nombre(max(valeurs))}\n"
+            f"Écart-type : {formater_nombre(statistics.pstdev(valeurs))}\n\n"
+            f"Zone la plus élevée : {self._nom_zone(cle_max)} ({formater_nombre(self.valeurs[cle_max])})"
+        )
+        QMessageBox.information(self, "Statistiques spatiales", texte)
+
+    def _afficher_zones_risque(self):
+        valeurs = [v for v in self.valeurs.values() if v is not None and math.isfinite(v)]
+        if not valeurs:
+            QMessageBox.information(self, "Zones à risque", "Aucune donnée numérique.")
+            return
+        seuil = sorted(valeurs)[int(0.75 * (len(valeurs) - 1))]
+        zones = [(cle, v) for cle, v in self.valeurs.items() if v is not None and v >= seuil]
+        zones.sort(key=lambda x: x[1], reverse=True)
+        texte = f"Zones au-dessus du 75e percentile (seuil {formater_nombre(seuil)}) :\n\n"
+        for cle, val in zones:
+            texte += f"- {self._nom_zone(cle)} : {formater_nombre(val)}\n"
+        if not zones:
+            texte = "Aucune zone au-dessus du seuil."
+        QMessageBox.information(self, "Zones à risque", texte)
 
     # ---- Rafraîchissement automatique ----
 
